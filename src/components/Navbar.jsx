@@ -219,6 +219,7 @@ const AppNavbar = () => {
       `}</style>
 
       <Navbar
+       variant="dark"
         expand="lg"
         sticky="top"
         expanded={expanded}
