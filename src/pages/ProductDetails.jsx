@@ -229,7 +229,8 @@ const ProductDetails = () => {
     );
   }
 
-  const frameUrl = `http://localhost:5001${product.image}`;
+  const frameUrl = `https://optic-backend.onrender.com${product.image}`;
+
 
   return (
     <div

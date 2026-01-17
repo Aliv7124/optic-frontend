@@ -559,8 +559,6 @@ export default AdminDashboard;
 */
 
 
-
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/api.js";
@@ -587,7 +585,7 @@ const AdminDashboard = () => {
     name: "",
     price: "",
     image: null,
-    category: "", 
+    category: "",
   });
 
   const [showImageModal, setShowImageModal] = useState(false);
@@ -603,7 +601,8 @@ const AdminDashboard = () => {
   // ---------------- Helper: Robust Download ----------------
   const handleDownload = async (filePath) => {
     try {
-      const fullPath = filePath.startsWith("http") ? filePath : `http://localhost:5001${filePath}`;
+      // Use full URL if starts with http, otherwise prepend API base
+      const fullPath = filePath.startsWith("http") ? filePath : `${API.defaults.baseURL}${filePath}`;
       const res = await fetch(fullPath);
       if (!res.ok) throw new Error("File not found");
       const blob = await res.blob();
@@ -611,7 +610,7 @@ const AdminDashboard = () => {
       const link = document.createElement("a");
       link.href = url;
       link.download = filePath.split("/").pop();
-      document.body.appendChild(link); // Required for some mobile browsers
+      document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
@@ -621,7 +620,6 @@ const AdminDashboard = () => {
     }
   };
 
-  // ---------------- Load Functions (Original) ----------------
   const loadProducts = async () => {
     try {
       setLoadingProducts(true);
@@ -758,16 +756,15 @@ const AdminDashboard = () => {
 
   return (
     <div className="d-flex flex-column flex-md-row min-vh-100">
-      
-      {/* Sidebar - Adjusts to top on mobile */}
-      <div className="bg-dark text-white p-3 d-flex flex-row flex-md-column" style={{ minWidth: 200, width: 'auto' }}>
+      {/* Sidebar */}
+      <div className="bg-dark text-white p-3 d-flex flex-row flex-md-column" style={{ minWidth: 200, width: "auto" }}>
         <h4 className="mb-0 mb-md-4 me-3 me-md-0">MS ADMIN</h4>
         <div className="d-flex flex-row flex-md-column flex-grow-1 overflow-auto">
-            <button className="btn btn-dark text-nowrap mb-0 mb-md-2 me-1 me-md-0" onClick={() => setTab("inventory")}>Inventory</button>
-            <button className="btn btn-dark text-nowrap mb-0 mb-md-2 me-1 me-md-0" onClick={() => setTab("orders")}>Orders</button>
-            <button className="btn btn-dark text-nowrap mb-0 mb-md-2 me-1 me-md-0" onClick={() => setTab("messages")}>Messages</button>
-            <button className="btn btn-dark text-nowrap mb-0 mb-md-2 me-1 me-md-0" onClick={() => setTab("settings")}>Settings</button>
-            <button className="btn btn-danger text-nowrap ms-auto ms-md-0 mt-md-auto" onClick={logout}>Logout</button>
+          <button className="btn btn-dark text-nowrap mb-0 mb-md-2 me-1 me-md-0" onClick={() => setTab("inventory")}>Inventory</button>
+          <button className="btn btn-dark text-nowrap mb-0 mb-md-2 me-1 me-md-0" onClick={() => setTab("orders")}>Orders</button>
+          <button className="btn btn-dark text-nowrap mb-0 mb-md-2 me-1 me-md-0" onClick={() => setTab("messages")}>Messages</button>
+          <button className="btn btn-dark text-nowrap mb-0 mb-md-2 me-1 me-md-0" onClick={() => setTab("settings")}>Settings</button>
+          <button className="btn btn-danger text-nowrap ms-auto ms-md-0 mt-md-auto" onClick={logout}>Logout</button>
         </div>
       </div>
 
@@ -796,7 +793,7 @@ const AdminDashboard = () => {
                       <td>{p.name}</td>
                       <td>₹{p.price}</td>
                       <td>{p.category}</td>
-                      <td>{p.image && <img src={`http://localhost:5001${p.image}`} width="50" alt={p.name} />}</td>
+                      <td>{p.image && <img src={`${API.defaults.baseURL}${p.image}`} width="50" alt={p.name} />}</td>
                       <td className="text-nowrap">
                         <Button size="sm" onClick={() => openEdit(p)}>Edit</Button>{" "}
                         <Button size="sm" variant="danger" onClick={() => deleteProduct(p._id)}>Delete</Button>
@@ -838,12 +835,12 @@ const AdminDashboard = () => {
                       <td>
                         {o.product?.image ? (
                           <img
-                            src={`http://localhost:5001${o.product.image}`}
+                            src={`${API.defaults.baseURL}${o.product.image}`}
                             alt="product"
                             width="50"
                             style={{ cursor: "pointer" }}
                             onClick={() => {
-                              setModalImage(`http://localhost:5001${o.product.image}`);
+                              setModalImage(`${API.defaults.baseURL}${o.product.image}`);
                               setShowImageModal(true);
                             }}
                           />
@@ -853,9 +850,7 @@ const AdminDashboard = () => {
                       <td>{o.lensType || "N/A"}</td>
                       <td>
                         {o.prescription ? (
-                          <Button size="sm" onClick={() => handleDownload(o.prescription)}>
-                            Download
-                          </Button>
+                          <Button size="sm" onClick={() => handleDownload(o.prescription)}>Download</Button>
                         ) : "-"}
                       </td>
                       <td>{o.paymentStatus || "Pending"}</td>
@@ -868,10 +863,10 @@ const AdminDashboard = () => {
                         {!o.status || o.status === "Pending" ? (
                           <>
                             <Button size="sm" variant="success" className="me-2" onClick={async () => {
-                                try { await API.put(`/admin/order/${o._id}/status`, { status: "Accepted" }); loadOrders(); } catch { alert("Accept failed"); }
+                              try { await API.put(`/admin/order/${o._id}/status`, { status: "Accepted" }); loadOrders(); } catch { alert("Accept failed"); }
                             }}>Accept</Button>
                             <Button size="sm" variant="warning" onClick={async () => {
-                                try { await API.put(`/admin/order/${o._id}/status`, { status: "Rejected" }); loadOrders(); } catch { alert("Reject failed"); }
+                              try { await API.put(`/admin/order/${o._id}/status`, { status: "Rejected" }); loadOrders(); } catch { alert("Reject failed"); }
                             }}>Reject</Button>
                           </>
                         ) : (
@@ -934,7 +929,7 @@ const AdminDashboard = () => {
           </>
         )}
 
-        {/* Settings Tab stays the same as your profile form logic */}
+        {/* Settings */}
         {tab === "settings" && (
           <>
             <h3>Admin Settings</h3>
@@ -959,7 +954,7 @@ const AdminDashboard = () => {
         )}
       </div>
 
-      {/* Modals remain same as original logic */}
+      {/* Modals */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>{editProduct ? "Edit Product" : "Add Product"}</Modal.Title>

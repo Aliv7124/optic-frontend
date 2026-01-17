@@ -461,7 +461,7 @@ const UserProfile = () => {
                       <td>
                         {o.product?.image ? (
                           <img
-                            src={`http://localhost:5001${o.product.image}`}
+                             src={`https://optic-backend.onrender.com${o.product.image}`}
                             width="50"
                             style={{
                               borderRadius: "8px",
@@ -469,8 +469,7 @@ const UserProfile = () => {
                             }}
                             onClick={() => {
                               setModalImage(
-                                `http://localhost:5001${o.product.image}`
-                              );
+                                `https://optic-backend.onrender.com${o.product.image}`);
                               setShowImageModal(true);
                             }}
                           />

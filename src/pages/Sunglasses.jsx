@@ -281,15 +281,16 @@ const SunglassesPage = () => {
                         background: "#f8f8f8",
                       }}
                     >
-                      <img
-                        src={`http://localhost:5001${p.image}`}
-                        alt={p.name}
-                        style={{
-                          maxHeight: "100%",
-                          maxWidth: "100%",
-                          objectFit: "contain",
-                        }}
-                      />
+                     <img
+  src={`https://optic-backend.onrender.com${p.image}`}
+  alt={p.name}
+  style={{
+    maxHeight: "100%",
+    maxWidth: "100%",
+    objectFit: "contain",
+  }}
+/>
+
                     </div>
                   )}
 
