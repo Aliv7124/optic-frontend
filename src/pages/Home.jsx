@@ -9,14 +9,12 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Load all products
   const loadProducts = async () => {
     try {
       setLoading(true);
       const res = await API.get("/products");
       setProducts(res.data.data);
     } catch (err) {
-      console.error(err);
       alert("Failed to load products");
     } finally {
       setLoading(false);
@@ -28,67 +26,169 @@ const Home = () => {
   }, []);
 
   return (
-    <Container className="mt-4">
-      <h3 className="mb-4">Our Products</h3>
+    <div
+      style={{
+        minHeight: "100vh",
+        width: "100%",
+        background: "linear-gradient(270deg, #0f0c29, #302b63, #24243e, #1a1a2e)",
+        backgroundSize: "800% 800%",
+        animation: "premiumBg 20s ease infinite",
+        padding: "2.5rem 1rem",
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      <Container style={{ maxWidth: "1200px" }}>
+        <h3
+          className="mb-5 text-center fw-bold main-heading"
+          style={{
+            position: "relative",
+            fontSize: "2.6rem",
+            background:
+              "linear-gradient(90deg, #ff512f, #dd2476, #24c6dc, #514a9d)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundSize: "400% 400%",
+            animation: "gradientMove 5s ease infinite",
+            textShadow: "0 4px 18px rgba(0,0,0,0.85)",
+          }}
+        >
+          Our Products
+          <span className="line-left" />
+          <span className="line-right" />
+        </h3>
 
-      {loading ? (
-        <div>Loading...</div>
-      ) : products.length === 0 ? (
-        <div>No products found.</div>
-      ) : (
-        <Row xs={1} sm={2} md={3} lg={4} className="g-4">
-          {products.map((p) => (
-            <Col key={p._id}>
-              <Card
-                className="h-100 shadow-sm"
-                style={{
-                  cursor: "pointer",
-                  borderRadius: "16px",
-                  border: "3px dashed transparent",
-                  backgroundImage:
-                    "linear-gradient(white, white), linear-gradient(135deg, #6a11cb, #2575fc)",
-                  backgroundOrigin: "border-box",
-                  backgroundClip: "padding-box, border-box",
-                  transition: "transform 0.2s, box-shadow 0.2s",
-                }}
-                onClick={() => navigate(`/product/${p._id}`)} // Card click navigates to product details
-              >
-                {p.image && (
-                  <Card.Img
-                    variant="top"
-                    src={`http://localhost:5001${p.image}`}
-                    style={{
-                      objectFit: "cover",
-                      width: "100%",
-                      height: "180px",
-                      borderRadius: "12px 12px 0 0",
-                    }}
-                  />
-                )}
-                <Card.Body className="d-flex flex-column">
-                  <Card.Title className="fs-6">{p.name}</Card.Title>
-                  <Card.Text className="mb-2">Price: ₹{p.price}</Card.Text>
+        <style>{`
+          @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+          @keyframes doorLeftLoop {
+            0% { left: 0; opacity: 1; }
+            45% { left: -55%; opacity: 0; }
+            55% { left: -55%; opacity: 0; }
+            100% { left: 0; opacity: 1; }
+          }
+          @keyframes doorRightLoop {
+            0% { right: 0; opacity: 1; }
+            45% { right: -55%; opacity: 0; }
+            55% { right: -55%; opacity: 0; }
+            100% { right: 0; opacity: 1; }
+          }
+          @keyframes premiumBg {
+            0% { background-position:0% 50%; }
+            50% { background-position:100% 50%; }
+            100% { background-position:0% 50%; }
+          }
 
-                  
-                  <Button
-                    variant="dark"
-                    className="mt-auto"
-                  
-                  >
-                    Buy Now
-                  </Button>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      )}
-    </Container>
+          .line-left,
+          .line-right {
+            position: absolute;
+            top: 50%;
+            height: 3px;
+            transform: translateY(-50%);
+          }
+
+          .line-left {
+            left: 0;
+            width: calc(50% - 130px);
+            background: linear-gradient(90deg, #ff512f, #dd2476);
+            animation: doorLeftLoop 3s ease-in-out infinite;
+          }
+
+          .line-right {
+            right: 0;
+            width: calc(50% - 130px);
+            background: linear-gradient(90deg, #dd2476, #24c6dc);
+            animation: doorRightLoop 3s ease-in-out infinite;
+          }
+
+          @media (max-width: 768px) {
+            .main-heading {
+              font-size: 1.9rem !important;
+              margin-bottom: 2.5rem !important;
+            }
+            .line-left,
+            .line-right {
+              width: 20%;
+            }
+          }
+
+          @media (max-width: 576px) {
+            .main-heading {
+              font-size: 1.6rem !important;
+            }
+          }
+        `}</style>
+
+        {loading ? (
+          <div className="text-center text-white fw-bold fs-5">Loading...</div>
+        ) : products.length === 0 ? (
+          <div className="text-center text-white fw-bold fs-5">
+            No products found.
+          </div>
+        ) : (
+          <Row xs={1} sm={2} md={3} lg={4} className="g-4">
+            {products.map((p) => (
+              <Col key={p._id}>
+                <Card
+                  className="h-100 shadow-lg"
+                  style={{
+                    cursor: "pointer",
+                    borderRadius: "20px",
+                    border: "3px solid transparent",
+                    backgroundImage:
+                      "linear-gradient(white, white), linear-gradient(135deg, #ff512f, #dd2476, #24c6dc)",
+                    backgroundOrigin: "border-box",
+                    backgroundClip: "padding-box, border-box",
+                    transition: "all 0.3s ease",
+                    overflow: "hidden",
+                  }}
+                  onClick={() => navigate(`/product/${p._id}`)}
+                >
+                  {p.image && (
+                    <Card.Img
+                      src={`http://localhost:5001${p.image}`}
+                      alt={p.name}
+                      style={{
+                        height: "200px",
+                        objectFit: "cover",
+                      }}
+                    />
+                  )}
+                  <Card.Body className="d-flex flex-column">
+                    <Card.Title className="fw-bold text-dark fs-6">
+                      {p.name}
+                    </Card.Title>
+                    <Card.Text className="fw-semibold text-secondary mb-3">
+                      ₹{p.price}
+                    </Card.Text>
+                    <Button
+                      className="mt-auto fw-bold"
+                      style={{
+                        borderRadius: "50px",
+                        background:
+                          "linear-gradient(135deg, #ff512f, #dd2476)",
+                        border: "none",
+                      }}
+                    >
+                      Buy Now
+                    </Button>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        )}
+      </Container>
+    </div>
   );
 };
 
 export default Home;
 */
+
 
 
 import React, { useEffect, useState } from "react";
@@ -125,7 +225,7 @@ const Home = () => {
         background: "linear-gradient(270deg, #0f0c29, #302b63, #24243e, #1a1a2e)",
         backgroundSize: "800% 800%",
         animation: "premiumBg 20s ease infinite",
-        padding: "2.5rem 1rem",
+        padding: "1.5rem 0.5rem",
         display: "flex",
         justifyContent: "center",
       }}
@@ -133,45 +233,21 @@ const Home = () => {
       <Container style={{ maxWidth: "1200px" }}>
         {/* Heading */}
         <h3
-          className="mb-5 text-center fw-bold"
+          className="mb-4 text-center fw-bold main-heading"
           style={{
             position: "relative",
-            fontSize: "2.6rem",
+            fontSize: "2rem",
             background:
               "linear-gradient(90deg, #ff512f, #dd2476, #24c6dc, #514a9d)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundSize: "400% 400%",
             animation: "gradientMove 5s ease infinite",
-            textShadow: "0 4px 18px rgba(0,0,0,0.85)",
-            cursor: "default",
           }}
         >
           Our Products
-          <span
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: 0,
-              width: "calc(50% - 130px)",
-              height: "3px",
-              background: "linear-gradient(90deg, #ff512f, #dd2476)",
-              transform: "translateY(-50%)",
-              animation: "doorLeftLoop 3s ease-in-out infinite",
-            }}
-          />
-          <span
-            style={{
-              position: "absolute",
-              top: "50%",
-              right: 0,
-              width: "calc(50% - 130px)",
-              height: "3px",
-              background: "linear-gradient(90deg, #dd2476, #24c6dc)",
-              transform: "translateY(-50%)",
-              animation: "doorRightLoop 3s ease-in-out infinite",
-            }}
-          />
+          <span className="line-left" />
+          <span className="line-right" />
         </h3>
 
         <style>{`
@@ -180,97 +256,137 @@ const Home = () => {
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
           }
+
           @keyframes doorLeftLoop {
             0% { left: 0; opacity: 1; }
             45% { left: -55%; opacity: 0; }
             55% { left: -55%; opacity: 0; }
             100% { left: 0; opacity: 1; }
           }
+
           @keyframes doorRightLoop {
             0% { right: 0; opacity: 1; }
             45% { right: -55%; opacity: 0; }
             55% { right: -55%; opacity: 0; }
             100% { right: 0; opacity: 1; }
           }
+
           @keyframes premiumBg {
             0% { background-position:0% 50%; }
             50% { background-position:100% 50%; }
             100% { background-position:0% 50%; }
           }
+
+          .line-left,
+          .line-right {
+            position: absolute;
+            top: 50%;
+            height: 3px;
+            width: 35%;
+            transform: translateY(-50%);
+          }
+
+          .line-left {
+            left: 0;
+            background: linear-gradient(90deg, #ff512f, #dd2476);
+            animation: doorLeftLoop 3s ease-in-out infinite;
+          }
+
+          .line-right {
+            right: 0;
+            background: linear-gradient(90deg, #dd2476, #24c6dc);
+            animation: doorRightLoop 3s ease-in-out infinite;
+          }
+
+          @media (max-width: 576px) {
+            .main-heading {
+              font-size: 1.6rem;
+            }
+            .line-left,
+            .line-right {
+              width: 22%;
+            }
+          }
         `}</style>
 
         {loading ? (
-          <div className="text-center text-white fw-bold fs-5">Loading...</div>
+          <div className="text-center text-white fw-bold">Loading...</div>
         ) : products.length === 0 ? (
-          <div className="text-center text-white fw-bold fs-5">No products found.</div>
+          <div className="text-center text-white fw-bold">
+            No products found.
+          </div>
         ) : (
-          <Row xs={1} sm={2} md={3} lg={4} className="g-4">
+          <Row xs={2} sm={3} md={3} lg={4} className="g-3">
             {products.map((p) => (
               <Col key={p._id}>
                 <Card
-                  className="h-100 shadow-lg"
+                  className="shadow"
                   style={{
                     cursor: "pointer",
-                    borderRadius: "20px",
-                    border: "3px solid transparent",
-                    backgroundImage:
-                      "linear-gradient(white, white), linear-gradient(135deg, #ff512f, #dd2476, #24c6dc)",
-                    backgroundOrigin: "border-box",
-                    backgroundClip: "padding-box, border-box",
-                    transition: "all 0.3s ease",
-                    overflow: "hidden", // 🟢 Important: keeps image inside
+                    borderRadius: "14px",
+                    overflow: "hidden",
                   }}
                   onClick={() => navigate(`/product/${p._id}`)}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "translateY(-6px)";
-                    e.currentTarget.style.boxShadow = "0 12px 28px rgba(0,0,0,0.35)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow = "0 6px 14px rgba(0,0,0,0.2)";
-                  }}
                 >
                   {p.image && (
                     <div
                       style={{
-                        overflow: "hidden",
-                        borderRadius: "18px 18px 0 0",
+                        height: "130px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        background: "#f8f8f8",
                       }}
                     >
-                      <Card.Img
+                      <img
                         src={`http://localhost:5001${p.image}`}
                         alt={p.name}
                         style={{
-                          height: "200px",
-                          objectFit: "cover",
-                          transition: "transform 0.5s ease",
+                          maxHeight: "100%",
+                          maxWidth: "100%",
+                          objectFit: "contain",
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.08)")}
-                        onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
                       />
                     </div>
                   )}
-                  <Card.Body className="d-flex flex-column">
-                    <Card.Title className="fw-bold text-dark fs-6">{p.name}</Card.Title>
-                    <Card.Text className="fw-semibold text-secondary mb-3">₹{p.price}</Card.Text>
-                    <Button
-                      className="mt-auto fw-bold"
+
+                  <Card.Body style={{ padding: "10px" }}>
+                    <Card.Title
                       style={{
-                        borderRadius: "50px",
-                        background: "linear-gradient(135deg, #ff512f, #dd2476)",
-                        border: "none",
-                        transition: "all 0.3s ease",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = "scale(1.08)";
-                        e.currentTarget.style.boxShadow = "0 6px 18px rgba(221,36,118,0.7)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = "scale(1)";
-                        e.currentTarget.style.boxShadow = "none";
+                        fontSize: "0.9rem",
+                        fontWeight: "bold",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        marginBottom: "4px",
                       }}
                     >
-                      Buy Now
+                      {p.name}
+                    </Card.Title>
+
+                    <Card.Text
+                      style={{
+                        fontSize: "0.85rem",
+                        fontWeight: "600",
+                        color: "#666",
+                        marginBottom: "6px",
+                      }}
+                    >
+                      ₹{p.price}
+                    </Card.Text>
+
+                    <Button
+                      className="w-100"
+                      style={{
+                        fontSize: "0.8rem",
+                        padding: "6px",
+                        borderRadius: "20px",
+                        background:
+                          "linear-gradient(135deg, #ff512f, #dd2476)",
+                        border: "none",
+                      }}
+                    >
+                      Buy
                     </Button>
                   </Card.Body>
                 </Card>
