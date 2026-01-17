@@ -236,10 +236,13 @@ const AppNavbar = () => {
             className="d-flex align-items-center gap-2"
           >
             <img src={logo} alt="MS Optical" height="38" />
-            <div className="d-none d-md-block text-white">
-              <div className="fw-bold fs-5">MS OPTICAL</div>
-              <small className="text-info">EYE CARE STORE</small>
-            </div>
+           <div className="text-white">
+  <div className="fw-bold fs-6 fs-md-5">MS OPTICAL</div>
+  <small className="text-info ">
+    EYE CARE STORE
+  </small>
+</div>
+
           </Navbar.Brand>
 
           <Navbar.Toggle onClick={() => setExpanded(!expanded)} />
